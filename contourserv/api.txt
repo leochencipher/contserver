@@ -1,0 +1,74 @@
+API purpose: Draw contour line/map into svg format.
+
+1. URI path - http://host:port/tools/contour
+accepting geojson data set and producing contour line or map in svg format
+GET- obtain help for the tool,  return the API document.
+//TBD define more capabilities of the tool
+POST
+- acceptable request representations
+    .application/json
+   {   
+        "input": data,  //the input data in geojson format
+       
+        " toolConfig" :  -//configuration of the contour drawing, in json format.
+        {
+              "outFormat": "svg",  //default is svg
+              "outStyle": "line"|"map", //output contour line or filed contour map
+              "levels":[], //levels
+              /*ther configure parameters please reference to contour(), contourf() and clable() functions                      http://matplotlib.org/api/pyplot_api.html */
+            
+         },
+          "async": "yes"|"no",  /*to process in aysnc or not. if  "no", it means processing in blocking way. The response body will contain the result. if "yes", the server will post result to "outResultUrl", the default is no*/
+         "resultUrl: URL or empty //once successful completion of the job, post result to the URL (how to handle security?). 
+         "processLogUrl: URL or empty, // once completion of the job, post processing log to the url
+  
+     }
+
+result and log post format:
+POST application/json
+{
+  "jobId" : id,
+  "result" : data,
+  'base64Encoded' : ['result']
+}
+
+POST application/json
+{
+  "jobId" : id,
+  "processingLog" : text
+  'base64Encoded' : ['processingLog']
+}         
+
+    available response representations:
+    .201 - application/json
+    {
+        "jobId": id, //identifier of the process job. used to subscribe server event 
+        "result":data, //for sync processing or empty if async (nonblocking)
+        "processingLog":text, //for sync processing or empty
+        "sseUrl":url, //for async processing or empty, el.g. "host:port/tools/contour/{jobId}/event"
+     }
+     .400 - input data error
+     .500 - server error
+     .501 - request not supported yet
+
+    2. URI Path: "host:port/tools/contour/{jobId}"
+    monitor and control the running job
+    parameter jobId is the id of the job, 
+    {
+        "jobId": id,
+        "jobStates": "running"|"stoped"|"finished"
+        "processingLog":text
+    }
+   
+    POST:
+    query parameter jobChange = s|p|r, //ask the server to stop, pause and resume the job. E.g  (Shuo Chen: could only cancel the job for now)
+    POST:  http://host:port/tools/contour/{jobId}?jobChange=s
+    more query parameters TBD
+    
+      available response representations:
+      .200
+    GET:
+    return status of the job
+     .application/json
+     {  //TBD
+     }

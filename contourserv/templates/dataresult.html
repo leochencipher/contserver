@@ -1,0 +1,22 @@
+<!doctype html>
+<title>Pls wait for result</title>
+
+<body>
+
+<h1> Result </h1>
+
+<div id ="result">
+	<h2>Calculating...</h2>
+</div>
+<div id="debug"></div>
+<script type="text/javascript">
+var eventOutputContainer = document.getElementById("result");
+var debugContainer = document.getElementById("debug");
+var evtSrc = new EventSource("/subscribe");
+ 
+evtSrc.onmessage= function(e) {
+             result.innerHTML = "<img src='/static/"+e.data+".svg'>";
+         };
+
+ </script>
+ </body>

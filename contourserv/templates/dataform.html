@@ -1,0 +1,15 @@
+<!doctype html>
+<title>Post Your Data</title>
+
+<body>
+<div class = page>
+<h1> You are login as {{username}}, Please post your data. The jobid for this transformation is {{jobid}}</h1>
+
+<form action="/ContourData" method=post>
+<input type="hidden" name="jobid" value="{{jobid}}">
+<input type='text' name=pointdata>
+<br>
+<input type="submit" value=Send>
+</form>
+</div>
+</body>

@@ -1,0 +1,1 @@
+curl -v -H "Content-Type: application/json" -X POST -d '{"screencast":{"subject":"tools"}}' http://127.0.0.1:5000/tools/contour
